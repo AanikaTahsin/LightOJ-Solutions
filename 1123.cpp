@@ -2,17 +2,15 @@
 #define MAXN 4*100000
 using namespace std;
 int pr[MAXN];
-int ran[MAXN];
 struct edge
 {
     int u, v, w;
-} ;
-vector<edge>e,e1;
+}e[100005];
 bool comp(edge q,edge p)
 {
     return q.w < p.w;
 }
-
+int tot ;
 int fin(int r)
 {
     if(pr[r]==r)return r;
@@ -20,29 +18,26 @@ int fin(int r)
 }
 int mst(int n)
 {
-    sort(e.begin(), e.end(), comp);
+    sort(e,e+tot, comp);
     for (int i = 1; i <= n; i++)
-        pr[i] = i,ran[i]=0;
+        pr[i] = i;
 
-    int cnt = 0, s = 0;
-    e1.clear();
-    for (int i = 0; i < e.size(); i++)
+    int cnt = 0, s = 0,ind=-1;
+    for (int i = 0; i < tot; i++)
     {
         int u = fin(e[i].u);
         int v = fin(e[i].v);
         if (u != v)
         {
-           pr[v]=u;
+            pr[u] = v;
             cnt++;
             s += e[i].w;
-            e1.push_back(e[i]);
-            if(cnt==n-1)
-                break;
         }
-
+        else
+            ind = i ;
     }
-    e.clear();
-    e = e1 ;
+    if(ind != -1)
+        e[ind] = e[--tot];
     if(cnt==n-1)
         return s ;
     else
@@ -58,7 +53,7 @@ int main()
         int n, m,x;
         scanf("%d%d",&n,&m);
         printf("Case %d:\n",cas++);
-        e.clear();
+        tot = 0 ;
         for (int i = 1; i <= m; i++)
         {
             int u, v, w;
@@ -67,7 +62,7 @@ int main()
             get.u = u;
             get.v = v;
             get.w = w;
-            e.push_back(get);
+            e[tot++]=get;
             printf("%d\n",mst(n));
         }
     }
