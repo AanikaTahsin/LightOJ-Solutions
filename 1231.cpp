@@ -2,55 +2,52 @@
 
 using namespace std;
 
-typedef long long ll;
+int a[55];
+int b[55];
 
-const int mod = 100000007;
+int dp[55][1001];
 
-ll n, k;
+typedef long long ll ;
 
-ll a[100005];
-ll c[100005];
-ll dp[100][1000];
+const ll mod = 1e8 + 7 ;
 
-int ans_me(ll i , ll sum)
+int n, k ;
+
+ll ans_me(int i , ll sum)
 {
-    if(sum==k)
+    if(i > n)
+        return 0 ;
+    if(sum == k)
         return 1 ;
-    if(i==n)
-        return 0;
-
-    if(dp[i][sum]!=-1)
+    if(dp[i][sum] != -1)
         return dp[i][sum];
 
-    ll ans = 0;
-    for(ll j = 0 ; j<=c[i] && (j*a[i]+sum<=k); j++)
-    {
-        ans += ans_me(i+1,sum+j*a[i]);
-        ans %= mod;
-    }
+    ll ret = 0;
+    for(ll j = 0 ; j<=b[i] and j*a[i] + sum <= k ; j++)
+        ret += ans_me(i+1,sum + a[i]*j), ret %= mod ;
 
-    return dp[i][sum]=ans;
+    return dp[i][sum] = ret ;
+
 }
-
 
 int main()
 {
-    int t, cas = 0 ;
+    int t , cas = 1 , i , j ;
+
     scanf("%d",&t);
 
     while(t--)
     {
-        ll i , j ;
-
-        memset(dp,-1,sizeof dp);
-
-        scanf("%lld%lld",&n,&k);
+        scanf("%d %d",&n,&k);
 
         for(i=0; i<n; i++)
-            scanf("%lld",&a[i]);
-        for(i=0; i<n; i++)
-            scanf("%lld",&c[i]);
+            scanf("%d",&a[i]);
 
-        printf("Case %d: %lld\n",++cas, ans_me(0,0));
+        for(i=0; i<n; i++)
+            scanf("%d",&b[i]);
+
+        memset(dp, -1 , sizeof dp);
+
+        printf("Case %d: %lld\n",cas++, ans_me(0,0));
     }
 }
